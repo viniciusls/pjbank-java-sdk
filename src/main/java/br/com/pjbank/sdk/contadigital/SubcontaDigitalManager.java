@@ -2,11 +2,11 @@ package br.com.pjbank.sdk.contadigital;
 
 import br.com.pjbank.sdk.api.PJBankClient;
 import br.com.pjbank.sdk.auth.PJBankAuthenticatedService;
-import br.com.pjbank.sdk.enums.StatusCartaoCorporativo;
+import br.com.pjbank.sdk.enums.StatusSubconta;
 import br.com.pjbank.sdk.exceptions.PJBankException;
 import br.com.pjbank.sdk.models.common.Boleto;
 import br.com.pjbank.sdk.models.common.Endereco;
-import br.com.pjbank.sdk.models.contadigital.CartaoCorporativo;
+import br.com.pjbank.sdk.models.contadigital.ResponseSubconta;
 import br.com.pjbank.sdk.models.contadigital.Subconta;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.methods.HttpGet;
@@ -52,7 +52,7 @@ public class SubcontaDigitalManager extends PJBankAuthenticatedService {
         params.put("sexo", String.valueOf(subconta.getSexo()));
         params.put("produto", subconta.getProduto());
         params.put("valor", subconta.getValor());
-        params.put("documento", subconta.getDocumento());
+        params.put("cnpj", subconta.getCpfCnpj().replaceAll("[^0-9]", ""));
         params.put("nome_cartao", subconta.getNome());
         params.put("email", subconta.getEmail());
 
@@ -61,7 +61,7 @@ public class SubcontaDigitalManager extends PJBankAuthenticatedService {
         String response = EntityUtils.toString(client.doRequest(httpPost).getEntity());
 
         JSONObject responseObject = new JSONObject(response).getJSONObject("data");
-        subconta.setToken(responseObject.getString("token_cartao"));
+        subconta.setSubconta(responseObject.getString("subconta"));
         subconta.setNumero(responseObject.getString("numero_cartao"));
 
         Boleto boleto = new Boleto();
@@ -75,11 +75,11 @@ public class SubcontaDigitalManager extends PJBankAuthenticatedService {
 
     /**
      * Retorna os dados cadastrais da subconta na conta digital
-     * @param tokenCartao: Token da subconta/cartão à ser consultado
+     * @param tokenSubconta: Token da subconta à ser consultado
      * @return CartaoCorporativo
      */
-    public CartaoCorporativo get(String tokenCartao) throws IOException, ParseException, PJBankException {
-        PJBankClient client = new PJBankClient(this.endPoint.replace("{{credencial-conta}}", this.credencial).concat("/").concat(tokenCartao));
+    public ResponseSubconta get(String tokenSubconta) throws IOException, ParseException, PJBankException {
+        PJBankClient client = new PJBankClient(this.endPoint.replace("{{credencial-conta}}", this.credencial).concat("/").concat(tokenSubconta));
         HttpGet httpGet = client.getHttpGetClient();
         httpGet.addHeader("x-chave-conta", this.chave);
 
@@ -87,18 +87,18 @@ public class SubcontaDigitalManager extends PJBankAuthenticatedService {
         JSONObject responseObject = new JSONObject(response).getJSONObject("data");
         DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
 
-        CartaoCorporativo cartaoCorporativo = new CartaoCorporativo();
-        cartaoCorporativo.setNome(responseObject.getString("nome_cartao"));
-        cartaoCorporativo.setDocumento(responseObject.getString("documento"));
-        cartaoCorporativo.setNumero(responseObject.getString("numero_cartao"));
+        ResponseSubconta responseSubconta = new ResponseSubconta();
+        responseSubconta.setNome(responseObject.getString("nome_cartao"));
+        responseSubconta.setDocumento(responseObject.getString("documento"));
+        responseSubconta.setNumero(responseObject.getString("numero_cartao"));
 
         String dataInicio = responseObject.getString("data_inicio");
         if (!StringUtils.isBlank(dataInicio))
-            cartaoCorporativo.setDataInicio(dateFormat.parse(dataInicio));
+            responseSubconta.setDataInicio(dateFormat.parse(dataInicio));
 
         String dataBloqueio = responseObject.getString("data_bloqueio");
         if (!StringUtils.isBlank(dataBloqueio))
-            cartaoCorporativo.setDataBloqueio(dateFormat.parse(dataBloqueio));
+            responseSubconta.setDataBloqueio(dateFormat.parse(dataBloqueio));
 
         Endereco endereco = new Endereco();
         endereco.setLogradouro(responseObject.getString("endereco"));
@@ -109,27 +109,27 @@ public class SubcontaDigitalManager extends PJBankAuthenticatedService {
         endereco.setEstado(responseObject.getString("estado"));
         endereco.setCep(responseObject.getString("cep"));
 
-        cartaoCorporativo.setEndereco(endereco);
+        responseSubconta.setEndereco(endereco);
 
         String telefone = responseObject.getString("telefone");
-        cartaoCorporativo.setDdd(Integer.parseInt(telefone.substring(0, 2)));
-        cartaoCorporativo.setTelefone(Long.parseLong(telefone.substring(2, telefone.length())));
+        responseSubconta.setDdd(Integer.parseInt(telefone.substring(0, 2)));
+        responseSubconta.setTelefone(Long.parseLong(telefone.substring(2, telefone.length())));
 
-        cartaoCorporativo.setEmail(responseObject.getString("email"));
-        cartaoCorporativo.setStatus(StatusCartaoCorporativo.fromString(responseObject.getString("status_cartao")));
-        cartaoCorporativo.setQtdBoletosCargaPendentes(responseObject.getInt("nm_boletos_carga_pendentes"));
+        responseSubconta.setEmail(responseObject.getString("email"));
+        responseSubconta.setStatus(StatusSubconta.fromString(responseObject.getString("status_cartao")));
+        responseSubconta.setQtdBoletosCargaPendentes(responseObject.getInt("nm_boletos_carga_pendentes"));
 
-        return cartaoCorporativo;
+        return responseSubconta;
     }
 
     /**
      * Realiza a emissão do boleto bancário para adicionar saldo à subconta digital
-     * @param tokenCartao: Token da subconta/cartão ao qual o saldo será adicionado
+     * @param tokenSubconta: Token da subconta/cartão ao qual o saldo será adicionado
      * @param valor: valor do saldo à ser adicionado
      * @return Boleto
      */
-    public Boleto addBalance(String tokenCartao, double valor) throws IOException, PJBankException {
-        PJBankClient client = new PJBankClient(this.endPoint.replace("{{credencial-conta}}", this.credencial).concat("/").concat(tokenCartao));
+    public Boleto addBalance(String tokenSubconta, double valor) throws IOException, PJBankException {
+        PJBankClient client = new PJBankClient(this.endPoint.replace("{{credencial-conta}}", this.credencial).concat("/").concat(tokenSubconta));
         HttpPost httpPost = client.getHttpPostClient();
         httpPost.addHeader("x-chave-conta", this.chave);
 

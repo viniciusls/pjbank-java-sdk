@@ -1,6 +1,6 @@
 package br.com.pjbank.sdk.models.contadigital;
 
-import br.com.pjbank.sdk.enums.StatusCartaoCorporativo;
+import br.com.pjbank.sdk.enums.StatusSubconta;
 import br.com.pjbank.sdk.models.common.Endereco;
 
 import java.util.Date;
@@ -10,7 +10,7 @@ import java.util.Date;
  * @version 1.0
  * @since 1.0
  */
-public class CartaoCorporativo {
+public class ResponseSubconta {
     private String nome;
     private String documento;
     private String numero;
@@ -20,13 +20,13 @@ public class CartaoCorporativo {
     private Endereco endereco;
     private int ddd;
     private long telefone;
-    private StatusCartaoCorporativo status;
+    private StatusSubconta status;
     private int qtdBoletosCargaPendentes;
 
-    public CartaoCorporativo() {
+    public ResponseSubconta() {
     }
 
-    public CartaoCorporativo(String nome, String documento, String numero, String email, Date dataInicio, Date dataBloqueio, Endereco endereco, int ddd, long telefone, StatusCartaoCorporativo status, int qtdBoletosCargaPendentes) {
+    public ResponseSubconta(String nome, String documento, String numero, String email, Date dataInicio, Date dataBloqueio, Endereco endereco, int ddd, long telefone, StatusSubconta status, int qtdBoletosCargaPendentes) {
         this.nome = nome;
         this.documento = documento;
         this.numero = numero;
@@ -112,11 +112,11 @@ public class CartaoCorporativo {
         this.telefone = telefone;
     }
 
-    public StatusCartaoCorporativo getStatus() {
+    public StatusSubconta getStatus() {
         return status;
     }
 
-    public void setStatus(StatusCartaoCorporativo status) {
+    public void setStatus(StatusSubconta status) {
         this.status = status;
     }
 

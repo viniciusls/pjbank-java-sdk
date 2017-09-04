@@ -5,12 +5,12 @@ package br.com.pjbank.sdk.enums;
  * @version 1.0
  * @since 1.0
  */
-public enum StatusCartaoCorporativo {
+public enum StatusSubconta {
     ATIVO("Ativo"), BLOQUEADO("Bloqueado"), INATIVO("Inativo"), PENDENTE("Pendente");
 
     private String name;
 
-    StatusCartaoCorporativo(String name) {
+    StatusSubconta(String name) {
         this.name = name;
     }
 
@@ -18,8 +18,8 @@ public enum StatusCartaoCorporativo {
         return this.name;
     }
 
-    public static StatusCartaoCorporativo fromString(String name) {
-        for (StatusCartaoCorporativo obj : StatusCartaoCorporativo.values()) {
+    public static StatusSubconta fromString(String name) {
+        for (StatusSubconta obj : StatusSubconta.values()) {
             if (obj.name.equalsIgnoreCase(name)) {
                 return obj;
             }

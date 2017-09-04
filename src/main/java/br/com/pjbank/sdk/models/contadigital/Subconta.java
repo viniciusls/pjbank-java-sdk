@@ -14,7 +14,7 @@ public class Subconta {
      * Dados para requisição
      */
     private String nome;
-    private String documento;
+    private String cpfCnpj;
     private Date dataNascimento;
     private char sexo;
     private String email;
@@ -25,15 +25,15 @@ public class Subconta {
      * Dados para resposta
      */
     private String numero;
-    private String token;
+    private String subconta;
     private Boleto boleto;
 
     public Subconta() {
     }
 
-    public Subconta(String nome, String documento, Date dataNascimento, char sexo, String email, String produto, double valor) {
+    public Subconta(String nome, String cpfCnpj, Date dataNascimento, char sexo, String email, String produto, double valor) {
         this.nome = nome;
-        this.documento = documento;
+        this.cpfCnpj = cpfCnpj;
         this.dataNascimento = dataNascimento;
         this.sexo = sexo;
         this.email = email;
@@ -49,12 +49,12 @@ public class Subconta {
         this.nome = nome;
     }
 
-    public String getDocumento() {
-        return documento;
+    public String getCpfCnpj() {
+        return cpfCnpj;
     }
 
-    public void setDocumento(String documento) {
-        this.documento = documento;
+    public void setCpfCnpj(String cpfCnpj) {
+        this.cpfCnpj = cpfCnpj;
     }
 
     public Date getDataNascimento() {
@@ -105,12 +105,12 @@ public class Subconta {
         this.numero = numero;
     }
 
-    public String getToken() {
-        return token;
+    public String getSubconta() {
+        return subconta;
     }
 
-    public void setToken(String token) {
-        this.token = token;
+    public void setSubconta(String subconta) {
+        this.subconta = subconta;
     }
 
     public Boleto getBoleto() {
