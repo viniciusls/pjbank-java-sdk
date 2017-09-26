@@ -34,6 +34,8 @@ public class SubcontaDigitalManager extends PJBankAuthenticatedService {
 
     public SubcontaDigitalManager(String credencial, String chave) {
         super(credencial, chave);
+
+        this.endPoint = this.endPoint.replace("{{credencial-conta}}", this.credencial);
     }
 
     /**
@@ -42,7 +44,7 @@ public class SubcontaDigitalManager extends PJBankAuthenticatedService {
      * @return Subconta
      */
     public Subconta create(Subconta subconta) throws IOException, PJBankException {
-        PJBankClient client = new PJBankClient(this.endPoint.replace("{{credencial-conta}}", this.credencial));
+        PJBankClient client = new PJBankClient(this.endPoint);
         HttpPost httpPost = client.getHttpPostClient();
         httpPost.addHeader("x-chave-conta", this.chave);
         DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
@@ -65,7 +67,7 @@ public class SubcontaDigitalManager extends PJBankAuthenticatedService {
         subconta.setNumero(responseObject.getString("numero_cartao"));
 
         Boleto boleto = new Boleto();
-        boleto.setNossoNumero(responseObject.getString("nosso_numero"));
+        boleto.setIdUnico(responseObject.getString("nosso_numero"));
         boleto.setLinkBoleto(responseObject.getString("link_boleto"));
         boleto.setLinhaDigitavel(responseObject.getString("linha_digitavel"));
         subconta.setBoleto(boleto);
@@ -78,8 +80,8 @@ public class SubcontaDigitalManager extends PJBankAuthenticatedService {
      * @param tokenSubconta: Token da subconta à ser consultado
      * @return CartaoCorporativo
      */
-    public ResponseSubconta get(String tokenSubconta) throws IOException, ParseException, PJBankException {
-        PJBankClient client = new PJBankClient(this.endPoint.replace("{{credencial-conta}}", this.credencial).concat("/").concat(tokenSubconta));
+    public CartaoCorporativo get(String tokenCartao) throws IOException, ParseException, PJBankException {
+        PJBankClient client = new PJBankClient(this.endPoint.concat("/").concat(tokenCartao));
         HttpGet httpGet = client.getHttpGetClient();
         httpGet.addHeader("x-chave-conta", this.chave);
 
@@ -128,8 +130,8 @@ public class SubcontaDigitalManager extends PJBankAuthenticatedService {
      * @param valor: valor do saldo à ser adicionado
      * @return Boleto
      */
-    public Boleto addBalance(String tokenSubconta, double valor) throws IOException, PJBankException {
-        PJBankClient client = new PJBankClient(this.endPoint.replace("{{credencial-conta}}", this.credencial).concat("/").concat(tokenSubconta));
+    public Boleto addBalance(String tokenCartao, double valor) throws IOException, PJBankException {
+        PJBankClient client = new PJBankClient(this.endPoint.concat("/").concat(tokenCartao));
         HttpPost httpPost = client.getHttpPostClient();
         httpPost.addHeader("x-chave-conta", this.chave);
 

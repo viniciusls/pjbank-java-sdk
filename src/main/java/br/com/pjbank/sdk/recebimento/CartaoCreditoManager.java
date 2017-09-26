@@ -1,12 +1,15 @@
 package br.com.pjbank.sdk.recebimento;
 
-import br.com.pjbank.sdk.api.PJBankClient;
-import br.com.pjbank.sdk.auth.PJBankAuthenticatedService;
-import br.com.pjbank.sdk.exceptions.PJBankException;
-import br.com.pjbank.sdk.models.Banco;
-import br.com.pjbank.sdk.models.recebimento.CartaoCredito;
-import br.com.pjbank.sdk.models.recebimento.PagamentoCartaoCredito;
-import br.com.pjbank.sdk.models.recebimento.TransacaoCartaoCredito;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
@@ -18,17 +21,12 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import br.com.pjbank.sdk.api.PJBankClient;
+import br.com.pjbank.sdk.auth.PJBankAuthenticatedService;
+import br.com.pjbank.sdk.exceptions.PJBankException;
+import br.com.pjbank.sdk.models.recebimento.CartaoCredito;
+import br.com.pjbank.sdk.models.recebimento.PagamentoCartaoCredito;
+import br.com.pjbank.sdk.models.recebimento.TransacaoCartaoCredito;
 
 /**
  * @author Vinícius Silva <vinicius.silva@superlogica.com>
@@ -169,7 +167,7 @@ public class CartaoCreditoManager extends PJBankAuthenticatedService {
     }
 
     /**
-     * Realização o cancelamento de uma transação via cartão de crédito
+     * Realiza o cancelamento de uma transação via cartão de crédito
      * @param idTransacao: Código identificador da transação a ser cancelada
      * @return boolean
      */
