@@ -8,6 +8,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.*;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONObject;
 
 import java.io.IOException;
 
@@ -27,7 +28,7 @@ public class PJBankClient {
         if (StringUtils.isBlank(endPoint))
             throw new IllegalArgumentException("Endpoint não informado");
 
-        this.absolutePath = PJBankConfig.getApiBaseUrl().concat(endPoint);
+        this.absolutePath = PJBankConfig.apiBaseUrl.concat(endPoint);
     }
 
     /**

@@ -1,6 +1,5 @@
 package br.com.pjbank.sdk.recebimento;
 
-import br.com.pjbank.sdk.api.PJBankConfigTest;
 import br.com.pjbank.sdk.exceptions.PJBankException;
 import br.com.pjbank.sdk.models.recebimento.CartaoCredito;
 import br.com.pjbank.sdk.models.recebimento.PagamentoCartaoCredito;
@@ -29,8 +28,8 @@ public class CartaoCreditoManagerTest {
 
     @Before
     public void init() {
-        this.credencial = PJBankConfigTest.credencialCartaoCreditoContaRecebimento;
-        this.chave = PJBankConfigTest.chaveCartaoCreditoContaRecebimento;
+        this.credencial = "1264e7bea04bb1c24b07ace759f64a1bd65c8560";
+        this.chave = "ef947cf5867488f744b82744dd3a8fc4852e529f";
     }
 
     @Test

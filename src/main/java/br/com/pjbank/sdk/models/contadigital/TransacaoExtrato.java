@@ -13,8 +13,8 @@ public class TransacaoExtrato {
     private String idTransacao;
     private String identificador;
     private String cnpjFavorecido;
-    private String nomeFavorecido;
-    private Date dataPagamento;
+    private String favorecido;
+    private Date data;
     private double valor;
     private String historico;
     private TipoTransacao tipo;
@@ -22,12 +22,12 @@ public class TransacaoExtrato {
     public TransacaoExtrato() {
     }
 
-    public TransacaoExtrato(String idTransacao, String identificador, String cnpjFavorecido, String nomeFavorecido, Date dataPagamento, double valor, String historico, TipoTransacao tipo) {
+    public TransacaoExtrato(String idTransacao, String identificador, String cnpjFavorecido, String favorecido, Date data, double valor, String historico, TipoTransacao tipo) {
         this.idTransacao = idTransacao;
         this.identificador = identificador;
         this.cnpjFavorecido = cnpjFavorecido;
-        this.nomeFavorecido = nomeFavorecido;
-        this.dataPagamento = dataPagamento;
+        this.favorecido = favorecido;
+        this.data = data;
         this.valor = valor;
         this.historico = historico;
         this.tipo = tipo;
@@ -57,20 +57,20 @@ public class TransacaoExtrato {
         this.cnpjFavorecido = cnpjFavorecido;
     }
 
-    public String getNomeFavorecido() {
-        return nomeFavorecido;
+    public String getFavorecido() {
+        return favorecido;
     }
 
-    public void setNomeFavorecido(String nomeFavorecido) {
-        this.nomeFavorecido = nomeFavorecido;
+    public void setFavorecido(String favorecido) {
+        this.favorecido = favorecido;
     }
 
-    public Date getDataPagamento() {
-        return dataPagamento;
+    public Date getData() {
+        return data;
     }
 
-    public void setDataPagamento(Date dataPagamento) {
-        this.dataPagamento = dataPagamento;
+    public void setData(Date data) {
+        this.data = data;
     }
 
     public double getValor() {

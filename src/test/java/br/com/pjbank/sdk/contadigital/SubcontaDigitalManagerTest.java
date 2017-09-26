@@ -1,12 +1,11 @@
 package br.com.pjbank.sdk.contadigital;
 
-import br.com.pjbank.sdk.api.PJBankConfigTest;
 import br.com.pjbank.sdk.exceptions.PJBankException;
 import br.com.pjbank.sdk.models.common.Boleto;
 import br.com.pjbank.sdk.models.contadigital.ResponseSubconta;
 import br.com.pjbank.sdk.models.contadigital.Subconta;
 import org.json.JSONException;
-import org.junit.Before;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -21,15 +20,6 @@ import static org.hamcrest.Matchers.*;
  * @since 1.0
  */
 public class SubcontaDigitalManagerTest {
-    private String credencial;
-    private String chave;
-
-    @Before
-    public void init() {
-        this.credencial = PJBankConfigTest.credencialContaDigital;
-        this.chave = PJBankConfigTest.chaveContaDigital;
-    }
-
     @Test
     public void create() throws IOException, JSONException, PJBankException {
         Subconta subconta = new Subconta();
