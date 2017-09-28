@@ -60,6 +60,21 @@ public class ContaDigitalManagerTest {
     }
 
     @Test
+    public void getAdmins() throws IOException, JSONException, PJBankException {
+        ContaDigitalManager contaDigitalManager = new ContaDigitalManager(this.credencial, this.chave);
+
+        List<Administrador> administradores = contaDigitalManager.getAdmins();
+
+        // O teste só será executado caso haja algum anexo na transação, do contrário não há como testar
+        if (administradores.size() > 0) {
+            Administrador administrador = administradores.get(0);
+            Assert.assertThat(administrador.getNome(), not(is(emptyOrNullString())));
+            Assert.assertThat(administrador.getStatus(), not(is(nullValue())));
+            Assert.assertThat(administrador.getEmail(), not(is(emptyOrNullString())));
+        }
+    }
+
+    @Test
     @Ignore
     public void addAdmin() throws IOException, JSONException, PJBankException {
         ContaDigitalManager contaDigitalManager = new ContaDigitalManager(this.credencial, this.chave);

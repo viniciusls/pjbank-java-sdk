@@ -3,10 +3,7 @@ package br.com.pjbank.sdk.contadigital;
 import br.com.pjbank.sdk.api.PJBankClient;
 import br.com.pjbank.sdk.api.PJBankConfig;
 import br.com.pjbank.sdk.auth.PJBankAuthenticatedService;
-import br.com.pjbank.sdk.enums.FormatoArquivo;
-import br.com.pjbank.sdk.enums.FormatoExtrato;
-import br.com.pjbank.sdk.enums.TipoAnexo;
-import br.com.pjbank.sdk.enums.TipoTransacao;
+import br.com.pjbank.sdk.enums.*;
 import br.com.pjbank.sdk.exceptions.PJBankException;
 import br.com.pjbank.sdk.models.common.Boleto;
 import br.com.pjbank.sdk.models.contadigital.*;
@@ -75,6 +72,36 @@ public class ContaDigitalManager extends PJBankAuthenticatedService {
         return new Boleto(responseObject.getString("id_unico"),
                 responseObject.getString("link_boleto"),
                 responseObject.getString("linha_digitavel"));
+    }
+
+    /**
+     * Lista os administradores da conta digital
+     * @return List<Administrador>
+     */
+    public List<Administrador> getAdmins() throws IOException, PJBankException {
+        PJBankClient client = new PJBankClient(this.endPoint.concat("/administradores"));
+        HttpGet httpGet = client.getHttpGetClient();
+        httpGet.addHeader("x-chave-conta", this.chave);
+
+        String response = EntityUtils.toString(client.doRequest(httpGet).getEntity());
+
+        JSONArray responseArray = new JSONArray(response);
+        List<Administrador> administradores = new ArrayList<>();
+
+        for(int i = 0; i < responseArray.length(); i++) {
+            JSONObject object = (JSONObject) responseArray.get(i);
+
+            Administrador administrador = new Administrador();
+            administrador.setNome(object.getString("nome"));
+            administrador.setSocio("true".equals(object.getString("socio")));
+            administrador.setStatus(StatusAdministrador.fromString(object.getString("status")));
+            administrador.setImagem(object.getString("imagem"));
+            administrador.setEmail(object.getString("email"));
+
+            administradores.add(administrador);
+        }
+
+        return administradores;
     }
 
     /**
