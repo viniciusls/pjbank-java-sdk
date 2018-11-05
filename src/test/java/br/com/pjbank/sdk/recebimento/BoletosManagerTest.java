@@ -1,9 +1,18 @@
 package br.com.pjbank.sdk.recebimento;
 
-import static org.hamcrest.Matchers.emptyOrNullString;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.nullValue;
+import br.com.pjbank.sdk.api.PJBankConfigTest;
+import br.com.pjbank.sdk.enums.StatusPagamentoBoleto;
+import br.com.pjbank.sdk.exceptions.PJBankException;
+import br.com.pjbank.sdk.models.common.Cliente;
+import br.com.pjbank.sdk.models.common.Endereco;
+import br.com.pjbank.sdk.models.recebimento.BoletoRecebimento;
+import br.com.pjbank.sdk.models.recebimento.ExtratoBoleto;
+import org.apache.http.ParseException;
+import org.json.JSONException;
+import org.junit.*;
+import org.junit.rules.TestRule;
+import org.junit.runner.Description;
+import org.junit.runners.model.Statement;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -14,20 +23,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.http.ParseException;
-import org.json.JSONException;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
-
-import br.com.pjbank.sdk.api.PJBankConfigTest;
-import br.com.pjbank.sdk.enums.StatusPagamentoBoleto;
-import br.com.pjbank.sdk.exceptions.PJBankException;
-import br.com.pjbank.sdk.models.common.Cliente;
-import br.com.pjbank.sdk.models.common.Endereco;
-import br.com.pjbank.sdk.models.recebimento.BoletoRecebimento;
-import br.com.pjbank.sdk.models.recebimento.ExtratoBoleto;
+import static org.hamcrest.Matchers.*;
 
 /**
  * @author Vinícius Silva <vinicius.silva@superlogica.com>
@@ -38,6 +34,9 @@ public class BoletosManagerTest {
     private String credencial;
     private String chave;
 
+    @Rule
+    public TestRules testRule = new TestRules();
+
     @Before
     public void init() {
         this.credencial = PJBankConfigTest.credencialBoletosContaRecebimento;
@@ -45,7 +44,7 @@ public class BoletosManagerTest {
     }
 
     @Test
-    @Ignore
+    @Columns({@Column(name = "a", type = "b")})
     public void create() throws IOException, JSONException, PJBankException {
         Cliente cliente = new Cliente();
         cliente.setNome("Cliente de Exemplo");
@@ -141,5 +140,27 @@ public class BoletosManagerTest {
         }
 
     }
-    
+
+    public class TestRules implements TestRule {
+        public Statement apply(final Statement base, final Description description) {
+            return new Statement() {
+                @Override
+                public void evaluate() throws Throwable {
+                    Columns testCasePriority = description.getAnnotation(Columns.class);
+                    Assume.assumeTrue("Test skipped for priotity " + testCasePriority.value()[0].name() + testCasePriority.value()[0].type(), false);
+
+                    base.evaluate();
+                }
+            };
+        }
+    }
+
+    public @interface Column {
+        String name();
+        String type();
+    }
+    public @interface Columns {
+        Column[] value();
+    }
+
 }
