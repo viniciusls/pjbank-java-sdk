@@ -15,6 +15,10 @@ import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 
 import java.io.IOException;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.net.URISyntaxException;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -146,8 +150,8 @@ public class BoletosManagerTest {
             return new Statement() {
                 @Override
                 public void evaluate() throws Throwable {
-                    Columns testCasePriority = description.getAnnotation(Columns.class);
-                    Assume.assumeTrue("Test skipped for priotity " + testCasePriority.value()[0].name() + testCasePriority.value()[0].type(), false);
+                    Columns testCaseConditions = description.getAnnotation(Columns.class);
+                    Assume.assumeTrue("Test skipped for priotity " + testCaseConditions.value()[0].name() + testCaseConditions.value()[0].type(), false);
 
                     base.evaluate();
                 }
@@ -155,10 +159,15 @@ public class BoletosManagerTest {
         }
     }
 
+    @Target(ElementType.METHOD)
+    @Retention(RetentionPolicy.RUNTIME)
     public @interface Column {
         String name();
         String type();
     }
+
+    @Target(ElementType.METHOD)
+    @Retention(RetentionPolicy.RUNTIME)
     public @interface Columns {
         Column[] value();
     }
